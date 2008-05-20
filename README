@@ -1,0 +1,50 @@
+= sfSslRequirement plugin (for symfony 1.1) =
+
+The `sfSslRequirement` is a symfony plugin that provides SSL encryption support for your module actions.
+
+It gives you 2 new security settings: `require_ssl` and `allow_ssl`.
+
+The plugin also adds 2 new `sfAction` methods: `->sslRequired()` and `->sslAllowed()`.
+
+== Logic ==
+
+Only execute once per request and SF_ENVIRONMENT in one of the environments configured in app_disable_sslfilter
+  * if not posting
+   * if secured
+    * then check if its allowed else redirect from https to http
+    * else if secured required redirect from http to https
+
+== Installation ==
+
+  * Install the plugin
+
+  {{{
+    symfony plugin:install symfony/sfSslRequirementPlugin
+  }}}
+
+  * Activate the filter in your `filters.yml`
+
+  {{{
+    sfSslRequirement:
+      class: sfSslRequirementFilter
+  }}}
+
+  * Clear your cache
+
+  {{{
+    symfony cc
+  }}}
+
+=== Secure your application ===
+
+To force SSL on an action:
+
+  * Add the following snippet to the module `security.yml`:
+
+  {{{
+    sslAction:
+      require_ssl: true
+  }}}
+
+  * You're done. Now, if you try to access the `sslAction` with HTTP, you will be automatically redirected to HTTPS.
+  * The `sslAction` listed here is an example.  Substitute with your actual action name.
