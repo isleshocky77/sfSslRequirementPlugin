@@ -26,8 +26,8 @@ class sfSslRequirementFilter extends sfFilter
       $context = $this->getContext();
       $request = $context->getRequest();
 
-      // only redirect if not posting and we actually have an http(s) request
-      if ($request->getMethod() != sfRequest::POST && substr($request->getUri(), 0, 4) == 'http')
+      // only redirect HEAD and GET http(s) requests
+      if (in_array($request->getMethod(), array(sfRequest::HEAD, sfRequest::GET)) && substr($request->getUri(), 0, 4) == 'http')
       {
         $controller = $context->getController();
 
