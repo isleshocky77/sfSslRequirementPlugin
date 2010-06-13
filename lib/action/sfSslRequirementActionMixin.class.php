@@ -60,20 +60,7 @@ class sfSslRequirementActionMixin
    */
   protected function sslRequired(sfAction $action)
   {
-    $security = $action->getSecurityConfiguration();
-    $actionName = $action->getActionName();
-
-    if (isset($security[$actionName]['require_ssl']))
-    {
-      return $security[$actionName]['require_ssl'];
-    }
-
-    if (isset($security['all']['require_ssl']))
-    {
-      return $security['all']['require_ssl'];
-    }
-
-    return false;
+    return $action->getSecurityValue('require_ssl');
   }
 
   /**
@@ -85,26 +72,7 @@ class sfSslRequirementActionMixin
    */
   protected function sslAllowed($action)
   {
-    $security = $action->getSecurityConfiguration();
-    $actionName = $action->getActionName();
-
-    // If ssl is required, then we can assume they also want to allow it
-    if ($this->sslRequired($action))
-    {
-      return true;
-    }
-
-    if (isset($security[$actionName]['allow_ssl']))
-    {
-      return $security[$actionName]['allow_ssl'];
-    }
-
-    if (isset($security['all']['allow_ssl']))
-    {
-      return $security['all']['allow_ssl'];
-    }
-
-    return false;
+    return $action->getSecurityValue('allow_ssl');
   }
 
   /**
@@ -116,21 +84,12 @@ class sfSslRequirementActionMixin
    */
   protected function getSslUrl($action)
   {
-    $security = $action->getSecurityConfiguration();
-    $actionName = $action->getActionName();
+    if (!$domain = $action->getSecurityValue('ssl_domain'))
+    {
+      $domain = substr_replace($action->getRequest()->getUri(), 'https', 0, 4);
+    }
 
-    if (isset($security[$actionName]['ssl_domain']))
-    {
-      return $security[$actionName]['ssl_domain'].$action->getRequest()->getScriptName().$action->getRequest()->getPathInfo();
-    }
-    else if (isset($security['all']['ssl_domain']))
-    {
-      return $security['all']['ssl_domain'].$action->getRequest()->getScriptName().$action->getRequest()->getPathInfo();
-    }
-    else
-    {
-      return substr_replace($action->getRequest()->getUri(), 'https', 0, 4);
-    }
+    return $domain;
   }
 
   /**
@@ -142,20 +101,11 @@ class sfSslRequirementActionMixin
    */
   protected function getNonSslUrl($action)
   {
-    $security = $action->getSecurityConfiguration();
-    $actionName = $action->getActionName();
+    if (!$domain = $action->getSecurityValue('non_ssl_domain'))
+    {
+      $domain = substr_replace($action->getRequest()->getUri(), 'http', 0, 5);
+    }
 
-    if (isset($security[$actionName]['non_ssl_domain']))
-    {
-      return $security[$actionName]['non_ssl_domain'].$action->getRequest()->getScriptName().$action->getRequest()->getPathInfo();
-    }
-    else if (isset($security['all']['non_ssl_domain']))
-    {
-      return $security['all']['non_ssl_domain'].$action->getRequest()->getScriptName().$action->getRequest()->getPathInfo();
-    }
-    else
-    {
-      return substr_replace($action->getRequest()->getUri(), 'http', 0, 5);
-    }
+    return $domain;
   }
 }
