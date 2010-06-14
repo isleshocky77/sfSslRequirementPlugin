@@ -72,7 +72,7 @@ class sfSslRequirementActionMixin
    */
   protected function sslAllowed($action)
   {
-    return $action->getSecurityValue('allow_ssl');
+    return $this->sslRequired($action) || $action->getSecurityValue('allow_ssl');
   }
 
   /**
