@@ -1,0 +1,20 @@
+{
+    "name": "kriswallsmith/sfSslRequirementPlugin",
+    "type": "symfony1-plugin",
+    "description": "The `sfSslRequirement` is a symfony plugin that provides SSL encryption support for your module actions.",
+    "keywords": [ "symfony", "ssl", "security" ],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Kris Wallmith",
+            "email": "kris.wallsmith@gmail.com",
+            "homepage": "http://kriswallsmith.net",
+            "role": "developer"
+        }
+    ],
+    "require": {
+        "php": ">=5.3.0",
+        "composer/installers": "dev-master",
+        "symfony/symfony1": "1.3.*"
+    }
+}
